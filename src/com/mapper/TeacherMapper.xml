@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.TeacherMapper">
+    <!--使用resultMap查询关联集合对象-->
+    <resultMap id="myMap" type="teacher">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <collection select="com.mapper.StudentMapper.selById"  property="student" column="id" ofType="student"></collection>
+    </resultMap>
+    <select id="selAll" resultMap="myMap">
+        SELECT * FROM teacher
+    </select>
+    <!--根据id查询-->
+    <select id="selById" parameterType="int" resultType="teacher">
+        SELECT * FROM teacher where id=#{0}
+    </select>
+    <!--实现resultMap两表联合查询-->
+    <resultMap id="colMap" type="teacher">
+        <id column="tid" property="id"></id>
+        <result column="tname" property="name"></result>
+        <collection property="student" ofType="student">
+            <id column="sid" property="id"></id>
+            <result column="sname" property="name"></result>
+            <result column="age" property="age"></result>
+            <result column="tid" property="tid"></result>
+        </collection>
+    </resultMap>
+    <select id="selAll1" resultMap="colMap">
+        SELECT t.id tid,t.name tname,s.id sid,s.name sname,age,tid FROM teacher t left OUTER JOIN student s
+        on t.id=s.tid
+    </select>
+</mapper>

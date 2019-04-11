@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.StudentMapper">
+    <!--resultMap实现关联单个对象-->
+    <resultMap id="stuMap" type="student">
+        <result column="tid" property="tid"></result>
+        <association property="teacher" select="com.mapper.TeacherMapper.selById" column="tid"></association>
+    </resultMap>
+    <select id="selAll" resultMap="stuMap">
+        SELECT  * FROM student
+    </select>
+    <!--根据id查询信息-->
+    <select id="selById" resultType="student" parameterType="int">
+        SELECT * FROM student where tid=#{0}
+    </select>
+    <!--使用 Auto Mapping 结合别名实现多表查询-->
+    <select id="selAll1" resultType="student">
+        select t.id `teacher.id`,t.name `teacher.name`,s.id id,s.name name,age,tid FROM student s
+          LEFT OUTER JOIN teacher t on t.id=s.tid
+    </select>
+</mapper>
