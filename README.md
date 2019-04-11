@@ -1,0 +1,2 @@
+# Mybatis-test
+about resultMap
